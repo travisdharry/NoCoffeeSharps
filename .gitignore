@@ -10,6 +10,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# .DS_Store
+.DS_Store
+
+# ignore config file
+config.py
+
 # C extensions
 *.so
 
