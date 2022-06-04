@@ -1,6 +1,8 @@
 absl-py==1.0.0
 alabaster==0.7.12
-anaconda-client
+anaconda-client==1.7.2
+anaconda-navigator==1.10.0
+anaconda-project==0.8.3
 applaunchservices==0.2.1
 appnope==0.1.2
 appscript==1.1.2
@@ -160,7 +162,7 @@ pep8==1.7.1
 pexpect==4.8.0
 pickleshare==0.7.5
 Pillow==9.0.1
-pip==21.2.4
+pip==22.1.2
 pkginfo==1.8.2
 platformdirs==2.4.0
 pluggy==1.0.0
