@@ -9,10 +9,6 @@ import plotly
 import plotly.express as px
 import plotly.graph_objects as go
 
-# import config file
-from config import league_id, api_key_MFL
-
-
 
 # Create a new Flask instance
 app = Flask(__name__)
@@ -21,14 +17,6 @@ app = Flask(__name__)
 @app.route('/')
 
 # Create a function
-def index():
-    title = "This is a test title"
-    body_message = "Hello, KB!"
-    return(render_template('index.html', title=title, body_message=body_message))
-
-# New Route
-@app.route("/api/v1.0/compareFranchises")
-
 def compareFranchises():
     # Initialize Franchise data
     franchise_df = pd.DataFrame()
