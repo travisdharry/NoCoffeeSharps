@@ -26,6 +26,9 @@ pip list --format=freeze > requirements.txt
 Create runtime.txt to tell Heroku how to run the app:
 $ echo "python-3.7.10" > runtime.txt
 
+Set config variables so they are not visible to public
+heroku config:set VARIABLE_NAME=joesmith
+
 Use git to push to Heroku:
 git add .
 git status
