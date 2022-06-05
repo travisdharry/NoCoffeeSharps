@@ -5,10 +5,14 @@ from bs4 import BeautifulSoup
 import requests
 from datetime import date
 import json
+import os
 import plotly
 import plotly.express as px
 import plotly.graph_objects as go
 
+
+# Get league id and api key from environment vars
+league_id = os.environ.get('league_id')
 
 # Create a new Flask instance
 app = Flask(__name__)
