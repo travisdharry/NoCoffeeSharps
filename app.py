@@ -27,24 +27,19 @@ def compareFranchises():
 
     league_id = request.args.get("leagueID")
 
-    # Initialize Franchise data
-    franchise_df = pd.DataFrame()
-    franchise_df['Franchise'] = ['0001', '0002', '0003', '0004', '0005', '0006', '0007', '0008', '0009', '0010', '0011', '0012', 'FA']
-    franchise_df['FranchiseCode'] = ['PMS', 'WFF', 'VER', 'DWS', 'CRO', 'OHS', 'FNF', 'CAM', 'PBW', 'SAS', 'GUS', 'IDK', 'FA']
-    franchise_df['FranchiseName'] =['PMS', 
-                                    'WFF', 
-                                    'VER', 
-                                    'DWS', 
-                                    'CRO', 
-                                    'OHS', 
-                                    'FNF', 
-                                    'CAM', 
-                                    'PBW', 
-                                    'SAS', 
-                                    'GUS', 
-                                    'IDK', 
-                                    'FA'
-                                    ]
+    # Get Franchises in the league
+    urlString = f"https://www54.myfantasyleague.com/2022/export?TYPE=league&L={league_id}"
+    response = requests.get(urlString)
+    soup = BeautifulSoup(response.content,'xml')
+
+    data = []
+    franchises = soup.find_all('franchise')
+    for i in range(len(franchises)):
+        rows = [franchises[i].get("id"), franchises[i].get("name")]
+        data.append(rows)
+    franchise_df = pd.DataFrame(data)
+    franchise_df.columns=['FranchiseID','FranchiseName']
+    franchise_df
 
     # Get all players' name, team name, position
     urlString = "https://api.myfantasyleague.com/2022/export?TYPE=players"
@@ -85,7 +80,7 @@ def compareFranchises():
         data.append(rows)
     fa_df = pd.DataFrame(data)
     rosters_df = rosters_df.append(fa_df)
-    rosters_df.columns=['Franchise','Week','PlayerID','RosterStatus']
+    rosters_df.columns=['FranchiseID','Week','PlayerID','RosterStatus']
 
     # Get Shark Ranks
     urlString = "https://api.myfantasyleague.com/2022/export?TYPE=playerRanks"
@@ -116,7 +111,7 @@ def compareFranchises():
     adp_df['ADP'] = adp_df['ADP'].astype('float32')
 
     # Merge all dfs
-    complete = player_df.merge(rosters_df, on='PlayerID').merge(franchise_df[['Franchise', 'FranchiseCode']], on='Franchise').merge(shark_df, on='PlayerID').merge(adp_df, on='PlayerID')
+    complete = player_df.merge(rosters_df, on='PlayerID').merge(franchise_df[['FranchiseID', 'FranchiseName']], on='FranchiseID').merge(shark_df, on='PlayerID').merge(adp_df, on='PlayerID')
     complete = complete.sort_values(by=['SharkRank'])
     complete.reset_index(inplace=True, drop=True)
 
@@ -172,33 +167,33 @@ def compareFranchises():
     tes_rostered = today[today['Position'] == "TE"]
     tes_rostered.reset_index(inplace=True, drop=True)
 
-    qbs_top = qbs_rostered.sort_values(by='Regressed', ascending=False, ignore_index=True).groupby('FranchiseCode').head(1)
-    rbs_top = rbs_rostered.sort_values(by='Regressed', ascending=False, ignore_index=True).groupby('FranchiseCode').head(2)
-    wrs_top = wrs_rostered.sort_values(by='Regressed', ascending=False, ignore_index=True).groupby('FranchiseCode').head(3)
-    tes_top = tes_rostered.sort_values(by='Regressed', ascending=False, ignore_index=True).groupby('FranchiseCode').head(2)
+    qbs_top = qbs_rostered.sort_values(by='Regressed', ascending=False, ignore_index=True).groupby('FranchiseName').head(1)
+    rbs_top = rbs_rostered.sort_values(by='Regressed', ascending=False, ignore_index=True).groupby('FranchiseName').head(2)
+    wrs_top = wrs_rostered.sort_values(by='Regressed', ascending=False, ignore_index=True).groupby('FranchiseName').head(3)
+    tes_top = tes_rostered.sort_values(by='Regressed', ascending=False, ignore_index=True).groupby('FranchiseName').head(2)
 
-    qbs_remainder = qbs_rostered[~qbs_rostered['PlayerID'].isin(qbs_top['PlayerID'])].groupby('FranchiseCode').head(1)
-    rbs_remainder = rbs_rostered[~rbs_rostered['PlayerID'].isin(rbs_top['PlayerID'])].groupby('FranchiseCode').head(3)
-    wrs_remainder = wrs_rostered[~wrs_rostered['PlayerID'].isin(wrs_top['PlayerID'])].groupby('FranchiseCode').head(3)
-    tes_remainder = tes_rostered[~tes_rostered['PlayerID'].isin(tes_top['PlayerID'])].groupby('FranchiseCode').head(3)
+    qbs_remainder = qbs_rostered[~qbs_rostered['PlayerID'].isin(qbs_top['PlayerID'])].groupby('FranchiseName').head(1)
+    rbs_remainder = rbs_rostered[~rbs_rostered['PlayerID'].isin(rbs_top['PlayerID'])].groupby('FranchiseName').head(3)
+    wrs_remainder = wrs_rostered[~wrs_rostered['PlayerID'].isin(wrs_top['PlayerID'])].groupby('FranchiseName').head(3)
+    tes_remainder = tes_rostered[~tes_rostered['PlayerID'].isin(tes_top['PlayerID'])].groupby('FranchiseName').head(3)
                                                             
     remainder = pd.concat([qbs_remainder, rbs_remainder, wrs_remainder, tes_remainder])
                                 
-    top_remainders = remainder.sort_values(by='Regressed', ascending=False, ignore_index=True).groupby('FranchiseCode').head(3)
+    top_remainders = remainder.sort_values(by='Regressed', ascending=False, ignore_index=True).groupby('FranchiseName').head(3)
                                 
     fran_rost = pd.concat([qbs_top, rbs_top, wrs_top, tes_top, top_remainders])
     fran_rost = fran_rost.sort_values(by='Regressed', ascending=False, ignore_index=True)
 
-    fran_rank = fran_rost.groupby('FranchiseCode').sum().sort_values(by='Regressed', ascending=False)
+    fran_rank = fran_rost.groupby('FranchiseName').sum().sort_values(by='Regressed', ascending=False)
 
     sorter = fran_rank.index
 
-    fran_rost.FranchiseCode = fran_rost.FranchiseCode.astype("category")
-    fran_rost.FranchiseCode.cat.set_categories(sorter, inplace=True)
-    fran_rost.sort_values(["FranchiseCode"], inplace=True)
+    fran_rost.FranchiseName = fran_rost.FranchiseName.astype("category")
+    fran_rost.FranchiseName.cat.set_categories(sorter, inplace=True)
+    fran_rost.sort_values(["FranchiseName"], inplace=True)
 
     fig = px.bar(fran_rost, 
-                x="FranchiseCode", 
+                x="FranchiseName", 
                 y="Regressed", 
                 color="Position", 
                 text='Name', 
