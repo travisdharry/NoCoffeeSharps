@@ -1,5 +1,5 @@
 # Import dependencies
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
@@ -11,17 +11,22 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 
-# Get league id and api key from environment vars
-league_id = os.environ.get('league_id')
-
 # Create a new Flask instance
 app = Flask(__name__)
 
 # Create Flask route
 @app.route('/')
+def index():
+    return render_template("index.html")
+
+# Create Flask route
+@app.route('/compare')
 
 # Create a function
 def compareFranchises():
+
+    league_id = request.args.get("leagueID")
+
     # Initialize Franchise data
     franchise_df = pd.DataFrame()
     franchise_df['Franchise'] = ['0001', '0002', '0003', '0004', '0005', '0006', '0007', '0008', '0009', '0010', '0011', '0012', 'FA']

@@ -7,6 +7,9 @@
     <title>{{title}}</title>
 </head>
 <body>
-    {{body_message}}
+    <form action="/compare" method="get">
+        <input autocomplete="off" autofocus name="leagueID" placeholder="Input your League ID" type="text">
+        <input type="submit">
+    </form> 
 </body>
 </html>
