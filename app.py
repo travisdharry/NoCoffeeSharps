@@ -39,7 +39,7 @@ def compareFranchises():
         data.append(rows)
     franchise_df = pd.DataFrame(data)
     franchise_df.columns=['FranchiseID','FranchiseName']
-    franchise_df
+    franchise_df = franchise_df.append({"FranchiseID":"FA", "FranchiseName":"Free Agent"}, ignore_index=True)
 
     # Get all players' name, team name, position
     urlString = "https://api.myfantasyleague.com/2022/export?TYPE=players"
@@ -111,7 +111,12 @@ def compareFranchises():
     adp_df['ADP'] = adp_df['ADP'].astype('float32')
 
     # Merge all dfs
-    complete = player_df.merge(rosters_df, on='PlayerID').merge(franchise_df[['FranchiseID', 'FranchiseName']], on='FranchiseID').merge(shark_df, on='PlayerID').merge(adp_df, on='PlayerID')
+    complete = player_df.merge(rosters_df, on='PlayerID', how='left').merge(franchise_df[['FranchiseID', 'FranchiseName']], on='FranchiseID', how='left').merge(shark_df, on='PlayerID', how='left').merge(adp_df, on='PlayerID', how='left')
+    complete['FranchiseID'].fillna("FA", inplace=True)
+    complete['FranchiseName'].fillna("Free Agent", inplace=True)
+    complete['RosterStatus'].fillna("Free Agent", inplace=True)
+    complete['SharkRank'].fillna(3000, inplace=True)
+    complete['ADP'].fillna(3000, inplace=True)
     complete = complete.sort_values(by=['SharkRank'])
     complete.reset_index(inplace=True, drop=True)
 
