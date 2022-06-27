@@ -133,19 +133,20 @@ def compareFranchises():
     defs_2022 = complete[complete['Position'] == "Def"]
     defs_2022.reset_index(inplace=True, drop=True)
 
-    qbs = pd.read_excel("data/RelativeValues2021.xlsx", sheet_name="QB")
-    rbs = pd.read_excel("data/RelativeValues2021.xlsx", sheet_name="RB")
-    wrs = pd.read_excel("data/RelativeValues2021.xlsx", sheet_name="WR")
-    tes = pd.read_excel("data/RelativeValues2021.xlsx", sheet_name="TE")
-    pks = pd.read_excel("data/RelativeValues2021.xlsx", sheet_name="PK")
-    defs = pd.read_excel("data/RelativeValues2021.xlsx", sheet_name="DEF")
+    qbs = pd.read_excel("data/RelativeValues.xlsx", sheet_name="QB")
+    rbs = pd.read_excel("data/RelativeValues.xlsx", sheet_name="RB")
+    wrs = pd.read_excel("data/RelativeValues.xlsx", sheet_name="WR")
+    tes = pd.read_excel("data/RelativeValues.xlsx", sheet_name="TE")
+    pks = pd.read_excel("data/RelativeValues.xlsx", sheet_name="PK")
+    defs = pd.read_excel("data/RelativeValues.xlsx", sheet_name="DEF")
 
-    qbs = qbs['Regressed']
-    rbs = rbs['Regressed']
-    wrs = wrs['Regressed']
-    tes = tes['Regressed']
-    pks = pks['Regressed']
-    defs = defs['Regressed']
+    qbs = qbs[['Projection_Relative', "Projection_Absolute"]]
+    rbs = rbs[['Projection_Relative', "Projection_Absolute"]]
+    wrs = wrs[['Projection_Relative', "Projection_Absolute"]]
+    tes = tes[['Projection_Relative', "Projection_Absolute"]]
+    pks = pks[['Projection_Relative', "Projection_Absolute"]]
+    defs = defs[['Projection_Relative', "Projection_Absolute"]]
+
 
     # Merge dfs
     qbs_2022 = pd.merge(qbs_2022, qbs, how="left", left_index=True, right_index=True)
@@ -161,8 +162,7 @@ def compareFranchises():
     priorWeeks['Date'] = pd.to_datetime(priorWeeks['Date'])
     result = pd.concat([priorWeeks, analyzed], axis=0, ignore_index=True)
 
-    today = result[result['Date'] == date.today()].sort_values(by='Regressed', ascending=False, ignore_index=True)
-
+    today = result[result['Date'] == date.today()].sort_values(by='Projection_Relative', ascending=False, ignore_index=True)   
     qbs_rostered = today[today['Position'] == "QB"]
     qbs_rostered.reset_index(inplace=True, drop=True)
     rbs_rostered = today[today['Position'] == "RB"]
@@ -172,10 +172,10 @@ def compareFranchises():
     tes_rostered = today[today['Position'] == "TE"]
     tes_rostered.reset_index(inplace=True, drop=True)
 
-    qbs_top = qbs_rostered.sort_values(by='Regressed', ascending=False, ignore_index=True).groupby('FranchiseName').head(1)
-    rbs_top = rbs_rostered.sort_values(by='Regressed', ascending=False, ignore_index=True).groupby('FranchiseName').head(2)
-    wrs_top = wrs_rostered.sort_values(by='Regressed', ascending=False, ignore_index=True).groupby('FranchiseName').head(3)
-    tes_top = tes_rostered.sort_values(by='Regressed', ascending=False, ignore_index=True).groupby('FranchiseName').head(2)
+    qbs_top = qbs_rostered.sort_values(by='Projection_Relative', ascending=False, ignore_index=True).groupby('FranchiseName').head(1)
+    rbs_top = rbs_rostered.sort_values(by='Projection_Relative', ascending=False, ignore_index=True).groupby('FranchiseName').head(2)
+    wrs_top = wrs_rostered.sort_values(by='Projection_Relative', ascending=False, ignore_index=True).groupby('FranchiseName').head(3)
+    tes_top = tes_rostered.sort_values(by='Projection_Relative', ascending=False, ignore_index=True).groupby('FranchiseName').head(2)
 
     qbs_remainder = qbs_rostered[~qbs_rostered['PlayerID'].isin(qbs_top['PlayerID'])].groupby('FranchiseName').head(1)
     rbs_remainder = rbs_rostered[~rbs_rostered['PlayerID'].isin(rbs_top['PlayerID'])].groupby('FranchiseName').head(3)
@@ -184,12 +184,13 @@ def compareFranchises():
                                                             
     remainder = pd.concat([qbs_remainder, rbs_remainder, wrs_remainder, tes_remainder])
                                 
-    top_remainders = remainder.sort_values(by='Regressed', ascending=False, ignore_index=True).groupby('FranchiseName').head(3)
+    top_remainders = remainder.sort_values(by='Projection_Absolute', ascending=False, ignore_index=True).groupby('FranchiseName').head(3)
                                 
     fran_rost = pd.concat([qbs_top, rbs_top, wrs_top, tes_top, top_remainders])
-    fran_rost = fran_rost.sort_values(by='Regressed', ascending=False, ignore_index=True)
+    fran_rost = fran_rost.sort_values(by='Projection_Relative', ascending=False, ignore_index=True)
 
-    fran_rank = fran_rost.groupby('FranchiseName').sum().sort_values(by='Regressed', ascending=False)
+
+    fran_rank = fran_rost.groupby('FranchiseName').sum().sort_values(by='Projection_Relative', ascending=False)
 
     sorter = fran_rank.index
 
@@ -199,7 +200,7 @@ def compareFranchises():
 
     fig = px.bar(fran_rost, 
                 x="FranchiseName", 
-                y="Regressed", 
+                y="Projection_Relative", 
                 color="Position", 
                 text='Name', 
                 color_discrete_map={
