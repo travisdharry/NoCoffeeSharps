@@ -204,10 +204,10 @@ def compareFranchises():
                 color="Position", 
                 text='Name', 
                 color_discrete_map={
-                    "RB": "#1033a6", #blue #1033a6 #0c2987
-                    "TE": "#1295ad", #teal #02687b #038097
-                    "WR": "#643fc1", #purple #4f22bc #643fc1
-                    "QB": "#f5d000"}, #gold #f5d000
+                    "RB": "#062647", #blue #1033a6 #0c2987 1033a6
+                    "TE": "#43B3AE", #teal #02687b #038097 1295ad
+                    "WR": "#621B74", #purple #4f22bc #643fc1 643fc1
+                    "QB": "#ffa524"}, #gold #f5d000 f5d000
                 category_orders={
                     "Position": ["RB", "QB", "WR", "TE"]}
                 )
