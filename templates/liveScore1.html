@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap - Prebuilt Layout</title>
+
+    <!-- Bootstrap -->
+    <link href="../../ff_demo/templates2/css/bootstrap-4.4.1.css" rel="stylesheet">
+
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+       <a class="navbar-brand" href="#">No <font color=red>Coffee</font> Sharps</a>
+    </nav>
+
+    <div class="jumbotron jumbotron-fluid text-center">
+       <table width="75%" border="1"  align="center">
+  <tbody>
+    <tr>
+	  <th>Matchup 1</th>
+      <th>Matchup 2</th>
+      <th>Matchup 3</th>
+      <th>Matchup 4</th>
+      <th>Matchup 5</th>
+      <th>Matchup 6</th>
+	</tr>
+	<tr>
+      <td>{{ M1A }}</td>
+      <td>{{ M2A }}</td>
+      <td>{{ M3A }}</td>
+      <td>{{ M4A }}</td>
+      <td>{{ M5A }}</td>
+      <td>{{ M6A }}</td>
+    </tr>
+    <tr>
+      <td>{{ M1B }}</td>
+      <td>{{ M2B }}</td>
+      <td>{{ M3B }}</td>
+      <td>{{ M4B }}</td>
+      <td>{{ M5B }}</td>
+      <td>{{ M6B }}</td>
+    </tr>
+  </tbody>
+</table>
+    </div>
+    <div class="container">
+       <div class="row text-center">
+          <div class="col-lg-3 offset-lg-3 col-md-6">{{ franchiseA }} </div>
+         <div class="col-lg-3 col-md-6">{{ franchiseB }}&nbsp;</div>
+</div>
+       <br>
+       <hr>
+       <br>
+       <br/>
+       <div class="row">
+          <div class=" col-md-6">{% for table in tableA %} {{ tableA|safe }} {% endfor %}</div>
+		 <div class=" col-md-6">{% for table in tableB %} {{ tableB|safe }} {% endfor %}</div>
+       </div>
+       <br/>
+       <br/>
+<br>
+       <hr>
+       <div class="row">
+          <div class="col-lg-6 offset-lg-3">
+             <h4>&nbsp; </h4>
+			  <img></img><p>Powered by Seti Web Design&nbsp; &nbsp; <a href="#">&nbsp;</a></p>
+          </div>
+       </div>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) --> 
+    <script src="../../ff_demo/templates2/js/jquery-3.4.1.min.js"></script>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed --> 
+    <script src="../../ff_demo/templates2/js/popper.min.js"></script>
+    <script src="../../ff_demo/templates2/js/bootstrap-4.4.1.js"></script>
+  </body>
+</html>

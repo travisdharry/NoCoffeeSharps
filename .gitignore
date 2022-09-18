@@ -3,6 +3,9 @@
 
 # ignore config file
 config.py
+data/
+sources/
+ignore/
 
 
 # Byte-compiled / optimized / DLL files

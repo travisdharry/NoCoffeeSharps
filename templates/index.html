@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
+    <title>Live Scoring</title>
 </head>
 <body>
-    <form action="/compare" method="get">
-        <input autocomplete="off" autofocus name="leagueID" placeholder="Input your League ID" type="text">
-        <input type="submit">
-    </form> 
+    {% for table in table1 %}
+        {{ table|safe }}
+    {% endfor %}
+    <br>
+    {% for table in table2 %}
+        {{ table|safe }}
+    {% endfor %}    
 </body>
 </html>

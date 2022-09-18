@@ -1,0 +1,12 @@
+@charset "UTF-8";
+.fullpage {
+    color: #000000;
+    background-color: #FFFFFF;
+}
+.jumbo {
+    background-color: #FFFFFF;
+}
+.myfoot {
+    font-family: InputMono;
+    font-size: small;
+}
