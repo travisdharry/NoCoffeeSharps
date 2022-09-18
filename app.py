@@ -74,8 +74,8 @@ def index():
     M5A = matchSumm.loc[matchSumm.matchup==4].drop(columns=['matchup', 'pivotIndex'])
     M6A = matchSumm.loc[matchSumm.matchup==5].drop(columns=['matchup', 'pivotIndex'])
     #Get franchise Names based on which matchup is selected
-    franchiseA = matchSumm.loc[(matchSumm.matchup==0) & (matchSumm.pivotIndex=="A"), 'franchiseName'][matchNumber]
-    franchiseB = matchSumm.loc[(matchSumm.matchup==0) & (matchSumm.pivotIndex=="B"), 'franchiseName'][matchNumber]
+    franchiseA = list(matchSumm.loc[(matchSumm.matchup==matchNumber) & (matchSumm.pivotIndex=="A"), 'franchiseName'])[0]
+    franchiseB = list(matchSumm.loc[(matchSumm.matchup==matchNumber) & (matchSumm.pivotIndex=="B"), 'franchiseName'])[0]
     # Select players on franchise roster
     tableA = df.loc[df.franchiseName==franchiseA]
     tableA.reset_index(inplace=True, drop=True)
